@@ -390,9 +390,6 @@ export default class ToolTip extends Component {
     if (!portalNodes[this.props.group]) {
       this.createPortal()
     }
-    let {parent, ...other} = props
-    let parentEl = typeof parent === 'string' ? document.querySelector(parent) : parent
-    ReactDOM.render(<Card parentEl={parentEl} {...other}/>, portalNodes[this.props.group].node)
   }
 
   componentDidMount() {
@@ -429,7 +426,6 @@ export default class ToolTip extends Component {
 
   componentWillUnmount() {
     if (portalNodes[this.props.group]) {
-      ReactDOM.unmountComponentAtNode(portalNodes[this.props.group].node)
       clearTimeout(portalNodes[this.props.group].timeout)
 
       try {
@@ -442,7 +438,13 @@ export default class ToolTip extends Component {
   }
 
   render() {
-    return null
+    let {parent, ...other} = this.props
+    let group = portalNodes[this.props.group]
+    if (!group || !group.node) return null
+    let container = group.node
+
+    let parentEl = typeof parent === 'string' ? document.querySelector(parent) : parent
+    return ReactDOM.createPortal(<Card parentEl={parentEl} {...other}/>, container)
   }
 }
 
