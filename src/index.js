@@ -377,7 +377,11 @@ export default class ToolTip extends Component {
     tooltipTimeout: 500
   }
 
-  createPortal() {
+  createPortalContainer() {
+    if (portalNodes[this.props.group]) {
+      return
+    }
+
     portalNodes[this.props.group] = {
       node: document.createElement('div'),
       timeout: false
@@ -386,18 +390,12 @@ export default class ToolTip extends Component {
     document.body.appendChild(portalNodes[this.props.group].node)
   }
 
-  renderPortal(props) {
-    if (!portalNodes[this.props.group]) {
-      this.createPortal()
-    }
-  }
-
   componentDidMount() {
     if (!this.props.active) {
       return
     }
 
-    this.renderPortal(this.props)
+    this.createPortalContainer()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -413,15 +411,19 @@ export default class ToolTip extends Component {
       clearTimeout(portalNodes[this.props.group].timeout)
     }
 
-    if (this.props.active && !props.active) {
-      newProps.active = true
+
+    if (this.props.active && !props.active && this.props.tooltipTimeout) {
+      this.setState({
+        pendingTooltipTimeoutForceActive: true
+      })
       portalNodes[this.props.group].timeout = setTimeout(() => {
-        props.active = false
-        this.renderPortal(props)
+        this.setState({
+          pendingTooltipTimeoutForceActive: false
+        })
       }, this.props.tooltipTimeout)
     }
 
-    this.renderPortal(newProps)
+    this.createPortalContainer()
   }
 
   componentWillUnmount() {
@@ -442,9 +444,10 @@ export default class ToolTip extends Component {
     let group = portalNodes[this.props.group]
     if (!group || !group.node) return null
     let container = group.node
+    const active = other.active || this.state.pendingTooltipTimeoutForceActive
 
     let parentEl = typeof parent === 'string' ? document.querySelector(parent) : parent
-    return ReactDOM.createPortal(<Card parentEl={parentEl} {...other}/>, container)
+    return ReactDOM.createPortal(<Card parentEl={parentEl} {...other} active={active}/>, container)
   }
 }
 
