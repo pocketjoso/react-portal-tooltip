@@ -1,4 +1,14 @@
-# React Portal Tooltip 
+# FORK OF React Portal Tooltip
+
+⚠️⚠️ - This fork does not re-use a single tooltip in the DOM between different
+instances of the component. It uses `ReactDOM.createPortal` instead of `ReactDOM.render`,
+in order to keep the component instances in the same react tree. This allows tooltips
+to contain things like Links from the React Router package.
+
+⚠️⚠️ - This fork is not made to be re-usable, it also has some other hardcoded changes
+from the main repo, noticably in regards to css transitions.
+
+------------------
 
 Awesome tooltips.
 
