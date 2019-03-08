@@ -69,7 +69,7 @@ class Card extends Component {
       boxShadow: '0 0 8px rgba(0,0,0,.3)',
       borderRadius: '3px',
       transition: `${this.state.transition} .3s ease-in-out, visibility .3s ease-in-out`,
-      opacity: this.state.hover || this.props.active ? 1 : 0,
+      opacity: (this.state.height && this.state.width) && (this.state.hover || this.props.active) ? 1 : 0,
       visibility: this.state.hover || this.props.active ? 'visible' : 'hidden',
       zIndex: 50,
       ...this.getStyle(this.props.position, this.props.arrow),
@@ -312,11 +312,15 @@ class Card extends Component {
     this.setState({hover: false})
   }
 
-  static getDerivedStateFromProps(props, state) {
-    return {
-      transition: state.hover || props.active ? 'all' : 'opacity',
-    }
-  }
+  // in our use case we only ever want to transition opacity.
+  // transitioning 'all' causes a transition into the correct tooltip position,
+  // from the original position _before_ the height/width is known
+  // - a transiton we do not want.
+  // static getDerivedStateFromProps(props, state) {
+  //   return {
+  //     transition: state.hover || props.active ? 'all' : 'opacity',
+  //   }
+  // }
 
   componentDidMount() {
     this.updateSize()
