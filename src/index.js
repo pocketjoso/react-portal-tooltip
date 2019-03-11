@@ -381,6 +381,10 @@ export default class ToolTip extends Component {
     tooltipTimeout: 500
   }
 
+  state = {
+    pendingTooltipTimeoutForceActive: false
+  }
+
   createPortalContainer() {
     if (portalNodes[this.props.group]) {
       return
@@ -400,6 +404,9 @@ export default class ToolTip extends Component {
     }
 
     this.createPortalContainer()
+  }
+  componentWillUnmount () {
+    this._unmounted = true
   }
 
   componentWillReceiveProps(nextProps) {
@@ -421,6 +428,7 @@ export default class ToolTip extends Component {
         pendingTooltipTimeoutForceActive: true
       })
       portalNodes[this.props.group].timeout = setTimeout(() => {
+        if (this._unmounted) return
         this.setState({
           pendingTooltipTimeoutForceActive: false
         })
