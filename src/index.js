@@ -82,7 +82,7 @@ class Card extends Component {
     return {
       position: 'absolute',
       content: '""',
-      transition: 'all .3s ease-in-out'
+      transition: 'opacity .3s ease-in-out'
     }
   }
 
