@@ -422,7 +422,7 @@ export default class ToolTip extends Component {
       this.setState({
         pendingTooltipTimeoutForceActive: true
       })
-      portalNodes[this.props.group].timeout = setTimeout(() => {
+      setTimeout(() => {
         if (this._unmounted) return
         this.setState({
           pendingTooltipTimeoutForceActive: false
@@ -435,8 +435,6 @@ export default class ToolTip extends Component {
 
   componentWillUnmount() {
     if (portalNodes[this.props.group]) {
-      clearTimeout(portalNodes[this.props.group].timeout)
-
       try {
         document.body.removeChild(portalNodes[this.props.group].node)
       }
