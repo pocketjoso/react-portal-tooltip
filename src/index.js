@@ -418,11 +418,6 @@ export default class ToolTip extends Component {
     let props = { ...nextProps }
     let newProps = { ...nextProps }
 
-    if (portalNodes[this.props.group] && portalNodes[this.props.group].timeout) {
-      clearTimeout(portalNodes[this.props.group].timeout)
-    }
-
-
     if (this.props.active && !props.active && this.props.tooltipTimeout) {
       this.setState({
         pendingTooltipTimeoutForceActive: true
